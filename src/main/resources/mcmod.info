@@ -1,0 +1,16 @@
+[
+{
+  "modid": "warmstone",
+  "name": "Warm Stone",
+  "description": "Melting the most delicious of mixins.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Noobanidus"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

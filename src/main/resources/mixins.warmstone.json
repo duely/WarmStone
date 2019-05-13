@@ -1,0 +1,11 @@
+{
+  "package": "com.noobanidus.warmstone.mixins",
+  "plugin": "com.noobanidus.warmstone.mixins.WarmstoneMixinPlugin",
+  "refmap": "mixins.warmstone.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.6.0",
+  "mixins": [
+    "MixinStructureVillagePieces$Village",
+    "MixinStructureVillagePieces$Path"
+  ]
+}
