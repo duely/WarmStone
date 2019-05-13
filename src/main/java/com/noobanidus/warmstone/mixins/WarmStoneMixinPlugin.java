@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
-public class WarmstoneMixinPlugin implements IMixinConfigPlugin {
+public class WarmStoneMixinPlugin implements IMixinConfigPlugin {
 	@Override
 	public void onLoad (String mixinPackage) {
 
@@ -21,7 +21,7 @@ public class WarmstoneMixinPlugin implements IMixinConfigPlugin {
             return null;
         }
 
-        return "mixins.warmstone.refmap.json";
+        return "mixins.melt.warmstone.json";
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class GrassGenerator implements IWorldGenerator {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 Block previous = null;
-                for (int y = Reference.MIN_CAVE_Y; y <= Reference.MAX_CAVE_Y; y++) {
+                for (int y = Reference.MIN_CAVE_Y; y <= Reference.GRASS_LIMIT_Y; y++) {
                     IBlockState state = chunk.getBlockState(bChunk.add(x, y, z));
                     if (state.getBlock() == Blocks.AIR && previous == Blocks.GRASS) {
                         world.setBlockState(bChunk.add(x, y, z),
