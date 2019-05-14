@@ -40,6 +40,34 @@ public class FallingTransformer implements IWarmTransformer {
             return writer.toByteArray();
         }
 
+        MethodNode neighbor = WarmStoneCore.findMethod(classNode, WarmStoneCore.neighborChangedFinder);
+        if (neighbor != null) {
+            neighbor.instructions.clear();
+            neighbor.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+            neighbor.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
+            neighbor.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
+            neighbor.instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
+            neighbor.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/noobanidus/warmstone/core/hooks/FallingHooks", "genericUpdate", "(Lnet/minecraft/block/BlockFalling;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;)V", false));
+
+            CustomClassWriter writer = new CustomClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+            classNode.accept(writer);
+            return writer.toByteArray();
+        }
+
+        MethodNode blockAdded = WarmStoneCore.findMethod(classNode, WarmStoneCore.onBlockAddedFinder);
+        if (blockAdded != null) {
+            blockAdded.instructions.clear();
+            blockAdded.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+            blockAdded.instructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
+            blockAdded.instructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
+            blockAdded.instructions.add(new VarInsnNode(Opcodes.ALOAD, 3));
+            blockAdded.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/noobanidus/warmstone/core/hooks/FallingHooks", "genericUpdate", "(Lnet/minecraft/block/BlockFalling;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;)V", false));
+
+            CustomClassWriter writer = new CustomClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+            classNode.accept(writer);
+            return writer.toByteArray();
+        }
+
         return basicClass;
     }
 }

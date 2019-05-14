@@ -41,7 +41,8 @@ public class PathHooks {
                         }
 
                         if (iblockstate4.getBlock() == Blocks.GRASS && worldIn.getBlockState(blockpos.up()).getBlock() == Blocks.TALLGRASS) {
-                            worldIn.setBlockState(blockpos, iblockstate, 2);                            worldIn.setBlockState(blockpos.up(), Blocks.AIR.getDefaultState(), 2);
+                            worldIn.setBlockState(blockpos, iblockstate, 2);
+                            worldIn.setBlockState(blockpos.up(), Blocks.AIR.getDefaultState(), 2);
                         }
 
                         if (iblockstate4.getMaterial().isLiquid()) {

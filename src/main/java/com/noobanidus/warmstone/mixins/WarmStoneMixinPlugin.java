@@ -10,42 +10,42 @@ import java.util.List;
 import java.util.Set;
 
 public class WarmStoneMixinPlugin implements IMixinConfigPlugin {
-	@Override
-	public void onLoad (String mixinPackage) {
+    @Override
+    public void onLoad(String mixinPackage) {
 
-	}
+    }
 
-	@Override
-	public String getRefMapperConfig () {
+    @Override
+    public String getRefMapperConfig() {
         if (Launch.blackboard.get("fml.deobfuscatedEnvironment") == Boolean.TRUE) {
             return null;
         }
 
         return "mixins.melt.warmstone.json";
-	}
-
-	@Override
-	public boolean shouldApplyMixin (String targetClassName, String mixinClassName) {
-		return !targetClassName.startsWith("net.minecraft.client") || MixinEnvironment.getCurrentEnvironment().getSide() == MixinEnvironment.Side.CLIENT;
     }
 
-	@Override
-	public void acceptTargets (Set<String> myTargets, Set<String> otherTargets) {
+    @Override
+    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        return !targetClassName.startsWith("net.minecraft.client") || MixinEnvironment.getCurrentEnvironment().getSide() == MixinEnvironment.Side.CLIENT;
+    }
 
-	}
+    @Override
+    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
 
-	@Override
-	public List<String> getMixins () {
-		return null;
-	}
+    }
 
-	@Override
-	public void preApply (String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    @Override
+    public List<String> getMixins() {
+        return null;
+    }
 
-	}
+    @Override
+    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
 
-	@Override
-	public void postApply (String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    }
 
-	}
+    @Override
+    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+
+    }
 }

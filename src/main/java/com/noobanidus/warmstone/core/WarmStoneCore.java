@@ -14,10 +14,12 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
     public static String getAverageGroundLevel;
     public static String addComponentParts;
     public static String canFallThrough;
+    public static String onBlockAdded;
+    public static String neighborChanged;
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { "com.noobanidus.warmstone.core.ClassTransformer"};
+        return new String[]{"com.noobanidus.warmstone.core.ClassTransformer"};
     }
 
     @Override
@@ -37,6 +39,8 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
         getAverageGroundLevel = dev ? "getAverageGroundLevel" : "func_74889_b";
         addComponentParts = dev ? "addComponentParts" : "func_74875_a";
         canFallThrough = dev ? "canFallThrough" : "func_185759_i";
+        onBlockAdded = dev ? "onBlockAdded" : "func_176213_c";
+        neighborChanged = dev ? "neighborChanged" : "func_189540_a";
     }
 
     @Override
@@ -44,7 +48,7 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
         return null;
     }
 
-    public static MethodNode findMethod (ClassNode node, Predicate<MethodNode> finder) {
+    public static MethodNode findMethod(ClassNode node, Predicate<MethodNode> finder) {
         for (MethodNode m : node.methods) {
             if (finder.test(m)) return m;
         }
@@ -55,4 +59,6 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
     public static Predicate<MethodNode> averageGroundLevelFinder = methodNode -> methodNode.name.equals(WarmStoneCore.getAverageGroundLevel);
     public static Predicate<MethodNode> addComponentPartsFinder = methodNode -> methodNode.name.equals(WarmStoneCore.addComponentParts);
     public static Predicate<MethodNode> canFallThroughFinder = methodNode -> methodNode.name.equals(WarmStoneCore.canFallThrough);
+    public static Predicate<MethodNode> onBlockAddedFinder = methodNode -> methodNode.name.equals(WarmStoneCore.onBlockAdded);
+    public static Predicate<MethodNode> neighborChangedFinder = methodNode -> methodNode.name.equals(WarmStoneCore.neighborChanged);
 }

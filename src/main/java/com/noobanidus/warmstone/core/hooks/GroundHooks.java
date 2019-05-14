@@ -1,7 +1,6 @@
 package com.noobanidus.warmstone.core.hooks;
 
 import com.noobanidus.warmstone.Util;
-import com.noobanidus.warmstone.WarmStone;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;

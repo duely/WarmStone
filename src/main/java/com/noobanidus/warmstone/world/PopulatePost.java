@@ -2,10 +2,9 @@ package com.noobanidus.warmstone.world;
 
 import com.noobanidus.warmstone.Util;
 import com.noobanidus.warmstone.WarmStone;
-import com.noobanidus.warmstone.core.hooks.FallingHooks;
 import com.noobanidus.warmstone.init.Reference;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import net.minecraft.block.BlockFalling;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +28,6 @@ public class PopulatePost {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPopulatePre(PopulateChunkEvent.Pre event) {
-        FallingHooks.fallingEnabled = false;
         int chunkx = event.getChunkX();
         int chunkz = event.getChunkZ();
         World world = event.getWorld();
@@ -96,11 +94,14 @@ public class PopulatePost {
     public static void underpinGravel(World world, Chunk chunk, BlockPos bChunk) {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = Reference.MAX_CAVE_Y + 10; y >= Reference.MIN_CAVE_Y + 15; y--) {
+                Block previous = null;
+                for (int y = Reference.MIN_CAVE_Y; y <= Reference.MAX_CAVE_Y + 15; y++) {
                     IBlockState state = chunk.getBlockState(bChunk.add(x, y, z));
-                    if (state.getBlock() == Blocks.GRAVEL) {
+                    if (previous == Blocks.AIR && state.getBlock() == Blocks.GRAVEL) {
                         world.setBlockState(bChunk.add(x, y, z), Blocks.STONE.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
                     }
+
+                    previous = state.getBlock();
                 }
             }
         }

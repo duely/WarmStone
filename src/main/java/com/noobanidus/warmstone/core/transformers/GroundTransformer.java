@@ -3,12 +3,11 @@ package com.noobanidus.warmstone.core.transformers;
 import com.noobanidus.warmstone.core.CustomClassWriter;
 import com.noobanidus.warmstone.core.IWarmTransformer;
 import com.noobanidus.warmstone.core.WarmStoneCore;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

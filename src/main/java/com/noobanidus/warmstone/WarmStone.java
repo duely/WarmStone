@@ -1,9 +1,14 @@
 package com.noobanidus.warmstone;
 
+import com.noobanidus.warmstone.flat.WorldProviderCaves;
+import com.noobanidus.warmstone.flat.WorldTypeFlat;
 import com.noobanidus.warmstone.world.GrassGenerator;
 import com.noobanidus.warmstone.world.GravelStopper;
 import net.minecraft.init.Biomes;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
@@ -26,10 +31,19 @@ public class WarmStone {
     @EventHandler
     public static void preInit(FMLPreInitializationEvent event) {
         LOG = event.getModLog();
+        WorldTypeFlat.createFlatWorld();
     }
 
     @EventHandler
     public static void init(FMLInitializationEvent event) {
+        try {
+            DimensionManager.unregisterDimension(0);
+            DimensionManager.registerDimension(0, DimensionType.register("OVERWORLD_CAVES", "", 0, WorldProviderCaves.class, true));
+        } catch (Exception e) {
+            LOG.error("Unable to replace overworld provider with overworld_caves provider. Void spawning will now be problematic.");
+            e.printStackTrace();
+        }
+
         GameRegistry.registerWorldGenerator(new GravelStopper(), Integer.MAX_VALUE - 1);
         GameRegistry.registerWorldGenerator(new GrassGenerator(), Integer.MAX_VALUE);
 
@@ -41,8 +55,10 @@ public class WarmStone {
     public static void postInit(FMLPostInitializationEvent event) {
     }
 
-    @EventHandler
-    public static void serverStarted(FMLServerStartedEvent event) {
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
+        World world = DimensionManager.getWorld(0);
+        world.setSeaLevel(23);
     }
 
     @EventHandler
