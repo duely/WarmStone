@@ -1,6 +1,7 @@
 package com.noobanidus.warmstone.core;
 
 import com.noobanidus.warmstone.core.transformers.GroundTransformer;
+import com.noobanidus.warmstone.core.transformers.PathTransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class ClassTransformer implements IClassTransformer {
 
     public ClassTransformer () {
         transformers.add(new GroundTransformer());
+        transformers.add(new PathTransformer());
     }
 
     @Override

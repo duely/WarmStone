@@ -20,19 +20,6 @@ public class GravelStopper implements IWorldGenerator {
         Chunk chunk = world.getChunk(chunkX, chunkZ);
         BlockPos bChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                Block previous = null;
-
-                for (int y = Reference.MIN_CAVE_Y; y <= Reference.MAX_CAVE_Y; y++) {
-                    IBlockState state = chunk.getBlockState(bChunk.add(x, y, z));
-                    if (previous == Blocks.AIR && state.getBlock() == Blocks.GRAVEL) {
-                        world.setBlockState(bChunk.add(x, y, z), Blocks.STONE.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
-                    }
-
-                    previous = state.getBlock();
-                }
-            }
-        }
+        PopulatePost.underpinGravel(world, chunk, bChunk);
     }
 }

@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 @IFMLLoadingPlugin.SortingIndex(1001)
 public class WarmStoneCore implements IFMLLoadingPlugin {
     public static String getAverageGroundLevel;
+    public static String addComponentParts;
 
     @Override
     public String[] getASMTransformerClass() {
@@ -33,6 +34,7 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
     public void injectData(Map<String, Object> data) {
         boolean dev = !(Boolean) data.get("runtimeDeobfuscationEnabled");
         getAverageGroundLevel = dev ? "getAverageGroundLevel" : "func_74889_b";
+        addComponentParts = dev ? "addComponentParts" : "func_74875_a";
     }
 
     @Override
@@ -49,4 +51,5 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
     }
 
     public static Predicate<MethodNode> averageGroundLevelFinder = methodNode -> methodNode.name.equals(WarmStoneCore.getAverageGroundLevel);
+    public static Predicate<MethodNode> addComponentPartsFinder = methodNode -> methodNode.name.equals(WarmStoneCore.addComponentParts);
 }
