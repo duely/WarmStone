@@ -16,7 +16,7 @@ import java.util.Random;
 
 @SuppressWarnings("unused")
 public class PathHooks {
-    public static List<Block> GRASS_STATES = Arrays.asList(Blocks.STONE, Blocks.MYCELIUM, Blocks.DIRT, Blocks.GRAVEL);
+    public static List<Block> GRASS_STATES = Arrays.asList(Blocks.STONE, Blocks.MYCELIUM, Blocks.DIRT, Blocks.GRAVEL, Blocks.SAND, Blocks.SANDSTONE, Blocks.RED_SANDSTONE);
 
     public static boolean addComponentParts(StructureVillagePieces.Path path, World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
         IBlockState iblockstate = Blocks.GRASS_PATH.getDefaultState();
@@ -40,14 +40,12 @@ public class PathHooks {
                             break;
                         }
 
-                        if (iblockstate4.getMaterial().isLiquid()) {
-                            worldIn.setBlockState(blockpos, iblockstate1, 2);
-                            break;
+                        if (iblockstate4.getBlock() == Blocks.GRASS && worldIn.getBlockState(blockpos.up()).getBlock() == Blocks.TALLGRASS) {
+                            worldIn.setBlockState(blockpos, iblockstate, 2);                            worldIn.setBlockState(blockpos.up(), Blocks.AIR.getDefaultState(), 2);
                         }
 
-                        if (iblockstate4.getBlock() == Blocks.SAND || iblockstate4.getBlock() == Blocks.SANDSTONE || iblockstate4.getBlock() == Blocks.RED_SANDSTONE) {
-                            worldIn.setBlockState(blockpos, iblockstate2, 2);
-                            worldIn.setBlockState(blockpos.down(), iblockstate3, 2);
+                        if (iblockstate4.getMaterial().isLiquid()) {
+                            worldIn.setBlockState(blockpos, iblockstate, 2);
                             break;
                         }
 

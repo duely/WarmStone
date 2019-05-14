@@ -1,5 +1,6 @@
 package com.noobanidus.warmstone.world;
 
+import com.noobanidus.warmstone.core.hooks.FallingHooks;
 import com.noobanidus.warmstone.init.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -21,5 +22,6 @@ public class GravelStopper implements IWorldGenerator {
         BlockPos bChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 
         PopulatePost.underpinGravel(world, chunk, bChunk);
+        FallingHooks.fallingEnabled = true;
     }
 }

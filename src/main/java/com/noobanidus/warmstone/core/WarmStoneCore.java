@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 public class WarmStoneCore implements IFMLLoadingPlugin {
     public static String getAverageGroundLevel;
     public static String addComponentParts;
+    public static String canFallThrough;
 
     @Override
     public String[] getASMTransformerClass() {
@@ -35,6 +36,7 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
         boolean dev = !(Boolean) data.get("runtimeDeobfuscationEnabled");
         getAverageGroundLevel = dev ? "getAverageGroundLevel" : "func_74889_b";
         addComponentParts = dev ? "addComponentParts" : "func_74875_a";
+        canFallThrough = dev ? "canFallThrough" : "func_185759_i";
     }
 
     @Override
@@ -52,4 +54,5 @@ public class WarmStoneCore implements IFMLLoadingPlugin {
 
     public static Predicate<MethodNode> averageGroundLevelFinder = methodNode -> methodNode.name.equals(WarmStoneCore.getAverageGroundLevel);
     public static Predicate<MethodNode> addComponentPartsFinder = methodNode -> methodNode.name.equals(WarmStoneCore.addComponentParts);
+    public static Predicate<MethodNode> canFallThroughFinder = methodNode -> methodNode.name.equals(WarmStoneCore.canFallThrough);
 }
