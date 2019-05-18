@@ -3,6 +3,7 @@ package com.noobanidus.warmstone.world;
 import com.noobanidus.warmstone.Util;
 import com.noobanidus.warmstone.WarmStone;
 import com.noobanidus.warmstone.init.Reference;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,18 +27,6 @@ public class PopulatePost {
     private static Random random = new Random();
     private static Map<ChunkPos, Long> villageChunks = new Object2LongOpenHashMap<>();
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onPopulatePre(PopulateChunkEvent.Pre event) {
-        int chunkx = event.getChunkX();
-        int chunkz = event.getChunkZ();
-        World world = event.getWorld();
-
-        Chunk chunk = world.getChunk(chunkx, chunkz);
-        BlockPos bChunk = new BlockPos(chunkx * 16, 0, chunkz * 16);
-
-        underpinGravel(world, chunk, bChunk);
-    }
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPopulatePost(PopulateChunkEvent.Post event) {
         int chunkx = event.getChunkX();
@@ -46,8 +35,6 @@ public class PopulatePost {
 
         Chunk chunk = world.getChunk(chunkx, chunkz);
         BlockPos bChunk = new BlockPos(chunkx * 16, 0, chunkz * 16);
-
-        underpinGravel(world, chunk, bChunk);
 
         boolean village = event.isHasVillageGenerated();
         if (village) {
@@ -62,8 +49,8 @@ public class PopulatePost {
                 }
             }
 
-            for (int x = 3; x < 16; x += 10) {
-                for (int z = 3; z < 16; z += 10) {
+            for (int x = 2; x < 16; x += 6) {
+                for (int z = 2; z < 16; z += 6) {
                     int y = Util.getCaveY(world, bChunk.add(x, 0, z));
                     int x2;
                     if (random.nextBoolean()) {
@@ -82,28 +69,51 @@ public class PopulatePost {
                 }
             }
         }
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                boolean didStuff = false;
+                IntArrayList air = new IntArrayList();
+                for (int y = 20; y <= 23; y++) {
+                    IBlockState state = chunk.getBlockState(bChunk.add(x, y, z));
+                    if (state.getBlock() == Blocks.AIR) {
+                        air.add(y);
+                    } else if (state.getBlock() == Blocks.LAVA || state.getBlock() == Blocks.FLOWING_LAVA) {
+                        for (int y2 : air) {
+                            world.setBlockState(bChunk.add(x, y2, z), Blocks.LAVA.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
+                        }
+                        if (state.getBlock() == Blocks.FLOWING_LAVA) {
+                            world.setBlockState(bChunk.add(x, y, z), Blocks.LAVA.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
+                        }
+                        didStuff = true;
+                        break;
+                    } else if (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER) {
+                        for (int y2 : air) {
+                            world.setBlockState(bChunk.add(x, y2, z), Blocks.WATER.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
+                        }
+                        if (state.getBlock() == Blocks.FLOWING_WATER) {
+                            world.setBlockState(bChunk.add(x, y, z), Blocks.WATER.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
+                        }
+                        didStuff = true;
+                        break;
+                    }
+                }
+                if (!didStuff) {
+                    for (int y = 0; y < 23; y++) {
+                        IBlockState state = world.getBlockState(bChunk.add(x,y, z));
+                        if (state.getBlock() == Blocks.AIR) {
+                            world.setBlockState(bChunk.add(x, y, z), Blocks.STONE.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static void tryPlacingTorch(BlockPos pos, World world) {
         IBlockState state = world.getBlockState(pos.down());
         if (state.getBlock().canPlaceTorchOnTop(state, world, pos.down())) {
             world.setBlockState(pos, Blocks.TORCH.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
-        }
-    }
-
-    public static void underpinGravel(World world, Chunk chunk, BlockPos bChunk) {
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                Block previous = null;
-                for (int y = Reference.MIN_CAVE_Y; y <= Reference.MAX_CAVE_Y + 15; y++) {
-                    IBlockState state = chunk.getBlockState(bChunk.add(x, y, z));
-                    if (previous == Blocks.AIR && state.getBlock() == Blocks.GRAVEL) {
-                        world.setBlockState(bChunk.add(x, y, z), Blocks.STONE.getDefaultState(), Constants.BlockFlags.NO_OBSERVERS | Constants.BlockFlags.SEND_TO_CLIENTS);
-                    }
-
-                    previous = state.getBlock();
-                }
-            }
         }
     }
 }

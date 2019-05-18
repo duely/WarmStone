@@ -1,8 +1,10 @@
 package com.noobanidus.warmstone.flat;
 
+import com.noobanidus.warmstone.Util;
 import com.noobanidus.warmstone.WarmStone;
 import com.noobanidus.warmstone.core.hooks.FallingHooks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -20,6 +22,7 @@ import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.structure.*;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
 
 public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
@@ -42,11 +45,7 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
 
         this.world = worldIn;
 
-        WarmStone.LOG.info(caveGenerator.getClass().toString());
-
         caveGenerator = net.minecraftforge.event.terraingen.TerrainGen.getModdedMapGen(caveGenerator, net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE);
-
-        WarmStone.LOG.info(caveGenerator.getClass().toString());
 
         ravineGenerator = net.minecraftforge.event.terraingen.TerrainGen.getModdedMapGen(ravineGenerator, net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE);
 
@@ -99,6 +98,17 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
         this.hasDecoration = map.containsKey("decoration");
         this.hasAnimals = map.containsKey("animals");
         this.hasIce = map.containsKey("ice");
+    }
+
+    @Override
+    public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
+        Biome biome = this.world.getBiome(pos);
+        List<Biome.SpawnListEntry> list = biome.getSpawnableList(creatureType);
+        if (creatureType == EnumCreatureType.AMBIENT) {
+            list.addAll(biome.getSpawnableList(EnumCreatureType.CREATURE));
+            list.addAll(biome.getSpawnableList(EnumCreatureType.WATER_CREATURE));
+        }
+        return super.getPossibleCreatures(creatureType, pos);
     }
 
     @Override
@@ -167,22 +177,6 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
             }
         }
 
-        if (this.waterLakeGenerator != null && !flag && this.random.nextInt(4) == 0) {
-            if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.world, this.random, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAKE)) {
-                this.waterLakeGenerator.generate(this.world, this.random, blockpos.add(this.random.nextInt(16) + 8, this.random.nextInt(256), this.random.nextInt(16) + 8));
-            }
-        }
-
-        if (this.lavaLakeGenerator != null && !flag && this.random.nextInt(8) == 0) {
-            if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.world, this.random, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAVA)) {
-                BlockPos blockpos1 = blockpos.add(this.random.nextInt(16) + 8, this.random.nextInt(this.random.nextInt(248) + 8), this.random.nextInt(16) + 8);
-
-                if (blockpos1.getY() < this.world.getSeaLevel() || this.random.nextInt(10) == 0) {
-                    this.lavaLakeGenerator.generate(this.world, this.random, blockpos1);
-                }
-            }
-        }
-
         if (this.hasDungeons) {
             if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.world, this.random, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON)) {
                 for (int i1 = 0; i1 < 8; ++i1) {
@@ -192,7 +186,7 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
         }
 
         if (this.hasDecoration) {
-            biome.decorate(this.world, this.random, blockpos);
+           biome.decorate(this.world, this.random, blockpos);
         }
 
         if (this.hasAnimals) {
@@ -206,6 +200,5 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
 
         net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.world, this.random, x, z, flag);
         net.minecraft.block.BlockFalling.fallInstantly = false;
-        FallingHooks.fallingEnabled = true;
     }
 }

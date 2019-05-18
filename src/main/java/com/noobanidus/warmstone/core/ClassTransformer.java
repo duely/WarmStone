@@ -14,7 +14,6 @@ public class ClassTransformer implements IClassTransformer {
     public ClassTransformer() {
         transformers.add(new GroundTransformer());
         transformers.add(new PathTransformer());
-        transformers.add(new FallingTransformer());
     }
 
     @Override

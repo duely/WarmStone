@@ -2,13 +2,14 @@ package com.noobanidus.warmstone;
 
 import com.noobanidus.warmstone.flat.WorldProviderCaves;
 import com.noobanidus.warmstone.flat.WorldTypeFlat;
+import com.noobanidus.warmstone.world.BiomeEvent;
 import com.noobanidus.warmstone.world.GrassGenerator;
-import com.noobanidus.warmstone.world.GravelStopper;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.*;
@@ -32,6 +33,9 @@ public class WarmStone {
     public static void preInit(FMLPreInitializationEvent event) {
         LOG = event.getModLog();
         WorldTypeFlat.createFlatWorld();
+        BiomeEvent handler = new BiomeEvent();
+        MinecraftForge.TERRAIN_GEN_BUS.register(handler);
+        MinecraftForge.ORE_GEN_BUS.register(handler);
     }
 
     @EventHandler
@@ -44,7 +48,6 @@ public class WarmStone {
             e.printStackTrace();
         }
 
-        GameRegistry.registerWorldGenerator(new GravelStopper(), Integer.MAX_VALUE - 1);
         GameRegistry.registerWorldGenerator(new GrassGenerator(), Integer.MAX_VALUE);
 
         MapGenVillage.VILLAGE_SPAWN_BIOMES = new ArrayList<>(MapGenVillage.VILLAGE_SPAWN_BIOMES);

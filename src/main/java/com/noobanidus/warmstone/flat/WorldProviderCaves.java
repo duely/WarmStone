@@ -27,11 +27,6 @@ public class WorldProviderCaves extends WorldProviderSurface {
     }
 
     @Override
-    public BlockPos getRandomizedSpawnPoint() {
-        return super.getRandomizedSpawnPoint();
-    }
-
-    @Override
     public float calculateCelestialAngle(long worldTime, float partialTicks) {
         return 0.5f;
     }
@@ -50,30 +45,20 @@ public class WorldProviderCaves extends WorldProviderSurface {
     @SideOnly(Side.CLIENT)
     @Override
     public boolean doesXZShowFog(int x, int z) {
-        return false;
+        return super.doesXZShowFog(x, z);
     }
 
     @Override
     public void getLightmapColors(float partialTicks, float sunBrightness, float skyLight, float blockLight, float[] colors) {
-        colors[0] = blockLight * 0.8f;
+        super.getLightmapColors(partialTicks, sunBrightness, skyLight, blockLight, colors);
+        /*colors[0] = blockLight * 0.8f;
         colors[1] = blockLight * 0.90f;
-        colors[2] = blockLight * 1f;
+        colors[2] = blockLight * 1f;*/
     }
 
     @Override
     public boolean isDaytime() {
         return false;
-    }
-
-    @Override
-    public float getSunBrightnessFactor(float partialTicks) {
-        return 0.0F;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public float getSunBrightness(float partialTicks) {
-        return 0.0F;
     }
 
     @Override
