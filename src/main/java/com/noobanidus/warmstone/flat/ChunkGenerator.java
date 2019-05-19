@@ -35,14 +35,10 @@ public class ChunkGenerator extends ChunkGeneratorFlat {
     private MapGenBase caveGenerator = new MapGenCaves();
     private MapGenBase ravineGenerator = new MapGenRavine();
 
-    private WorldGenLakes waterLakeGenerator = null;
-    private WorldGenLakes lavaLakeGenerator = null;
-
     private final boolean hasDecoration;
     private final boolean hasDungeons;
     private final boolean hasAnimals;
     private final boolean hasIce;
-    private final boolean hasCaves;
     private final boolean hasRavines;
 
     public ChunkGenerator(World worldIn, long seed, boolean generateStructures, String flatGeneratorSettings) {
@@ -95,9 +91,6 @@ public class ChunkGenerator extends ChunkGeneratorFlat {
             }
         }
 
-        if (map.containsKey("lake")) waterLakeGenerator = new WorldGenLakes(Blocks.WATER);
-        if (map.containsKey("lava_lake")) lavaLakeGenerator = new WorldGenLakes(Blocks.LAVA);
-        this.hasCaves = map.containsKey("caves");
         this.hasRavines = map.containsKey("ravines");
         this.hasDungeons = map.containsKey("dungeon");
         this.hasDecoration = map.containsKey("decoration");
