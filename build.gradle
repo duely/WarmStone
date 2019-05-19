@@ -44,6 +44,10 @@ repositories {
         name = "Gilded Games (Phosphor)"
         url = "https://repo.gildedgames.com/maven"
     }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
 }
 
 dependencies {
@@ -58,6 +62,8 @@ dependencies {
     }
 
     deobfCompile("me.jellysquid.mods:phosphor:1.12.2-0.2.4+build46")
+    deobfCompile 'mowzies-mobs:mowziesmobs:1.5.4'
+    deobfCompile 'void-island-control:voidislandcontrol:1.5.3'
 }
 
 processResources {

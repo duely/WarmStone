@@ -1,10 +1,18 @@
 package com.noobanidus.warmstone.flat;
 
-import com.noobanidus.warmstone.Util;
-import com.noobanidus.warmstone.WarmStone;
+import com.bobmowzie.mowziesmobs.MowziesMobs;
+import com.bobmowzie.mowziesmobs.server.entity.barakoa.EntityBarakoana;
+import com.bobmowzie.mowziesmobs.server.entity.foliaath.EntityFoliaath;
+import com.bobmowzie.mowziesmobs.server.entity.frostmaw.EntityFrostmaw;
+import com.bobmowzie.mowziesmobs.server.entity.lantern.EntityLantern;
+import com.bobmowzie.mowziesmobs.server.entity.naga.EntityNaga;
 import com.noobanidus.warmstone.core.hooks.FallingHooks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.monster.EntityHusk;
+import net.minecraft.entity.monster.EntityPolarBear;
+import net.minecraft.entity.monster.EntityStray;
+import net.minecraft.entity.passive.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -13,10 +21,7 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.ChunkGeneratorFlat;
-import net.minecraft.world.gen.FlatGeneratorInfo;
-import net.minecraft.world.gen.MapGenBase;
-import net.minecraft.world.gen.MapGenRavine;
+import net.minecraft.world.gen.*;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.structure.*;
@@ -25,9 +30,9 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
+public class ChunkGenerator extends ChunkGeneratorFlat {
     private World world;
-    private MapGenBase caveGenerator = new MapGenCaves256();
+    private MapGenBase caveGenerator = new MapGenCaves();
     private MapGenBase ravineGenerator = new MapGenRavine();
 
     private WorldGenLakes waterLakeGenerator = null;
@@ -40,7 +45,7 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
     private final boolean hasCaves;
     private final boolean hasRavines;
 
-    public ChunkGeneratorFlatCaves(World worldIn, long seed, boolean generateStructures, String flatGeneratorSettings) {
+    public ChunkGenerator(World worldIn, long seed, boolean generateStructures, String flatGeneratorSettings) {
         super(worldIn, seed, generateStructures, flatGeneratorSettings);
 
         this.world = worldIn;
@@ -100,15 +105,37 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
         this.hasIce = map.containsKey("ice");
     }
 
+    private static List<Biome.SpawnListEntry> possibles = null;
+
     @Override
     public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
-        Biome biome = this.world.getBiome(pos);
-        List<Biome.SpawnListEntry> list = biome.getSpawnableList(creatureType);
-        if (creatureType == EnumCreatureType.AMBIENT) {
-            list.addAll(biome.getSpawnableList(EnumCreatureType.CREATURE));
-            list.addAll(biome.getSpawnableList(EnumCreatureType.WATER_CREATURE));
+        if (possibles == null) {
+            Biome biome = this.world.getBiome(pos);
+            possibles = biome.getSpawnableList(creatureType);
+            if (creatureType == EnumCreatureType.AMBIENT) {
+                possibles.addAll(biome.getSpawnableList(EnumCreatureType.CREATURE));
+                possibles.addAll(biome.getSpawnableList(EnumCreatureType.WATER_CREATURE));
+                possibles.add(new Biome.SpawnListEntry(EntityRabbit.class, 2, 1, 1));
+                possibles.add(new Biome.SpawnListEntry(EntityRabbit.class, 2, 1, 3));
+                possibles.add(new Biome.SpawnListEntry(EntityLlama.class, 2, 1, 3));
+                possibles.add(new Biome.SpawnListEntry(EntityOcelot.class, 2, 1, 1));
+                possibles.add(new Biome.SpawnListEntry(EntityParrot.class, 2, 1, 2));
+                possibles.add(new Biome.SpawnListEntry(EntityMooshroom.class, 2, 1, 3));
+                possibles.add(new Biome.SpawnListEntry(EntityPolarBear.class, 1, 1, 2));
+                possibles.add(new Biome.SpawnListEntry(EntityStray.class, 10, 4, 4));
+                possibles.add(new Biome.SpawnListEntry(EntityHusk.class, 10, 4, 4));
+                possibles.add(new Biome.SpawnListEntry(EntityFoliaath.class, MowziesMobs.CONFIG.spawnrateFoliaath, 1, 3));
+                possibles.add(new Biome.SpawnListEntry(EntityBarakoana.class, MowziesMobs.CONFIG.spawnrateBarakoa, 1, 1));
+                possibles.add(new Biome.SpawnListEntry(EntityFrostmaw.class, MowziesMobs.CONFIG.spawnrateFrostmaw, 1, 1));
+                possibles.add(new Biome.SpawnListEntry(EntityLantern.class, MowziesMobs.CONFIG.spawnrateLantern, 1, 2));
+                possibles.add(new Biome.SpawnListEntry(EntityNaga.class, MowziesMobs.CONFIG.spawnrateNaga, 1, 3));
+            }
         }
-        return super.getPossibleCreatures(creatureType, pos);
+        if (creatureType == EnumCreatureType.AMBIENT) {
+            return possibles;
+        } else {
+            return super.getPossibleCreatures(creatureType, pos);
+        }
     }
 
     @Override
@@ -129,9 +156,7 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
             }
         }
 
-        if (hasCaves) {
-            caveGenerator.generate(this.world, x, z, chunkprimer);
-        }
+        caveGenerator.generate(this.world, x, z, chunkprimer);
 
         if (hasRavines) {
             ravineGenerator.generate(this.world, x, z, chunkprimer);
@@ -186,7 +211,7 @@ public class ChunkGeneratorFlatCaves extends ChunkGeneratorFlat {
         }
 
         if (this.hasDecoration) {
-           biome.decorate(this.world, this.random, blockpos);
+            biome.decorate(this.world, this.random, blockpos);
         }
 
         if (this.hasAnimals) {

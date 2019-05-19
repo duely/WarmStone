@@ -1,11 +1,9 @@
 package com.noobanidus.warmstone;
 
-import com.noobanidus.warmstone.flat.WorldProviderCaves;
-import com.noobanidus.warmstone.flat.WorldTypeFlat;
 import com.noobanidus.warmstone.world.BiomeEvent;
 import com.noobanidus.warmstone.world.GrassGenerator;
+import com.noobanidus.warmstone.world.Liquidifier;
 import net.minecraft.init.Biomes;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.common.DimensionManager;
@@ -32,7 +30,6 @@ public class WarmStone {
     @EventHandler
     public static void preInit(FMLPreInitializationEvent event) {
         LOG = event.getModLog();
-        WorldTypeFlat.createFlatWorld();
         BiomeEvent handler = new BiomeEvent();
         MinecraftForge.TERRAIN_GEN_BUS.register(handler);
         MinecraftForge.ORE_GEN_BUS.register(handler);
@@ -40,15 +37,8 @@ public class WarmStone {
 
     @EventHandler
     public static void init(FMLInitializationEvent event) {
-        try {
-            DimensionManager.unregisterDimension(0);
-            DimensionManager.registerDimension(0, DimensionType.register("OVERWORLD_CAVES", "", 0, WorldProviderCaves.class, true));
-        } catch (Exception e) {
-            LOG.error("Unable to replace overworld provider with overworld_caves provider. Void spawning will now be problematic.");
-            e.printStackTrace();
-        }
-
         GameRegistry.registerWorldGenerator(new GrassGenerator(), Integer.MAX_VALUE);
+        GameRegistry.registerWorldGenerator(new Liquidifier(), Integer.MAX_VALUE);
 
         MapGenVillage.VILLAGE_SPAWN_BIOMES = new ArrayList<>(MapGenVillage.VILLAGE_SPAWN_BIOMES);
         MapGenVillage.VILLAGE_SPAWN_BIOMES.add(Biomes.OCEAN);
@@ -66,5 +56,20 @@ public class WarmStone {
 
     @EventHandler
     public static void loadComplete(FMLLoadCompleteEvent event) {
+        /*Map<IWorldGenerator, Integer> indexed = ObfuscationReflectionHelper.getPrivateValue(GameRegistry.class, null, "worldGeneratorIndex");
+        IWorldGenerator cofh_world = null;
+        for (Map.Entry<IWorldGenerator, Integer> gen : indexed.entrySet()) {
+            if (gen.getKey().getClass().toString().contains("cofh.cofhworld.init.WorldHandler") && gen.getValue() == Integer.MAX_VALUE) {
+                cofh_world = gen.getKey();
+                LOG.info("Found CoFH world: " + cofh_world.toString());
+                break;
+            }
+        }
+        if (cofh_world != null) {
+            indexed.remove(cofh_world);
+            indexed.put(cofh_world, 10);
+        }
+        ObfuscationReflectionHelper.setPrivateValue(GameRegistry.class, null, indexed, "worldGeneratorIndex");
+        ObfuscationReflectionHelper.setPrivateValue(GameRegistry.class, null, null, "sortedGeneratorList");*/
     }
 }

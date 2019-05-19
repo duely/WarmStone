@@ -1,5 +1,6 @@
 package com.noobanidus.warmstone.world;
 
+import com.noobanidus.warmstone.WarmStone;
 import com.noobanidus.warmstone.init.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
