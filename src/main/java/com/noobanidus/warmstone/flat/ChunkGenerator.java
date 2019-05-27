@@ -1,19 +1,16 @@
 package com.noobanidus.warmstone.flat;
 
-import com.bobmowzie.mowziesmobs.MowziesMobs;
-import com.bobmowzie.mowziesmobs.server.entity.barakoa.EntityBarakoana;
-import com.bobmowzie.mowziesmobs.server.entity.foliaath.EntityFoliaath;
-import com.bobmowzie.mowziesmobs.server.entity.frostmaw.EntityFrostmaw;
-import com.bobmowzie.mowziesmobs.server.entity.lantern.EntityLantern;
-import com.bobmowzie.mowziesmobs.server.entity.naga.EntityNaga;
+import com.bobmowzie.mowziesmobs.server.entity.barakoa.EntityBarakoa;
 import com.noobanidus.warmstone.core.hooks.FallingHooks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.EntityStray;
 import net.minecraft.entity.passive.*;
-import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -23,7 +20,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.*;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
-import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.structure.*;
 
 import javax.annotation.Nonnull;
@@ -117,11 +113,12 @@ public class ChunkGenerator extends ChunkGeneratorFlat {
                 possibles.add(new Biome.SpawnListEntry(EntityPolarBear.class, 1, 1, 2));
                 possibles.add(new Biome.SpawnListEntry(EntityStray.class, 10, 4, 4));
                 possibles.add(new Biome.SpawnListEntry(EntityHusk.class, 10, 4, 4));
-                possibles.add(new Biome.SpawnListEntry(EntityFoliaath.class, MowziesMobs.CONFIG.spawnrateFoliaath, 1, 3));
-                possibles.add(new Biome.SpawnListEntry(EntityBarakoana.class, MowziesMobs.CONFIG.spawnrateBarakoa, 1, 1));
-                possibles.add(new Biome.SpawnListEntry(EntityFrostmaw.class, MowziesMobs.CONFIG.spawnrateFrostmaw, 1, 1));
-                possibles.add(new Biome.SpawnListEntry(EntityLantern.class, MowziesMobs.CONFIG.spawnrateLantern, 1, 2));
-                possibles.add(new Biome.SpawnListEntry(EntityNaga.class, MowziesMobs.CONFIG.spawnrateNaga, 1, 3));
+
+                possibles.add(new Biome.SpawnListEntry((Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation("mowziesmobs", "foliaath")), 4, 1, 3));
+                possibles.add(new Biome.SpawnListEntry((Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation("mowziesmobs", "barakoana")), 5, 1, 3));
+                possibles.add(new Biome.SpawnListEntry((Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation("mowziesmobs", "frostmaw")), 1, 1, 3));
+                possibles.add(new Biome.SpawnListEntry((Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation("mowziesmobs", "lantern")), 3, 1, 3));
+                possibles.add(new Biome.SpawnListEntry((Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation("mowziesmobs", "naga")), 1, 1, 3));
             }
         }
         if (creatureType == EnumCreatureType.AMBIENT) {
